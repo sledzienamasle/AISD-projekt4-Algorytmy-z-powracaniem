@@ -77,10 +77,10 @@ class Graf:
                 cykl.append(stack.pop())
         
         end_time = time.perf_counter()
-        czas_wykonania = end_time - start_time
-        print("\nCykl Eulera (wierzchołki w kolejności odwiedzin):")
+        czas_wykonania_ms = (end_time - start_time) * 1000  # konwersja na milisekundy
+        print("\n--- CYKL EULERA ---")
         print("Sciezka: " + " -> ".join(map(str, reversed(cykl))))
-        print(f"Czas wykonania: {czas_wykonania:.6f} sekund")
+        print(f"Czas wykonania: {czas_wykonania_ms:.6f} ms")
 
     def _is_hamilton_safe(self, wierzcholek, pos, sciezka):
         # Sprawdza, czy wierzchołki są połączone
@@ -128,3 +128,5 @@ if __name__ == "__main__":
     graf = Graf(ilosc_wierzcholkow)
     graf.generowanie_hamiltona(procent_saturacji)
     graf.wyswietl_macierz()
+    graf.znajdz_cykl_eulera()
+    graf.znajdz_cykl_hamiltona()
