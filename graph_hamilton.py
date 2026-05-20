@@ -104,7 +104,22 @@ class Graf:
                 sciezka[pos] = -1 # backtrack
         return False
     
-    
+    def znajdz_cykl_hamiltona(self):
+        sciezka = [-1] * self.ilosc_wierzcholkow
+        sciezka[0] = 0 # zaczynamy od wierzchołka 0
+
+        start_time = time.perf_counter()
+        ma_cykl = self._hamilton_util(sciezka, 1)
+        end_time = time.perf_counter()
+        czas_wykonania_ms = (end_time - start_time) * 1000  # konwersja na milisekundy
+        print("\n--- CYKL HAMILTONA ---")
+        print(f"Czas wykonania: {czas_wykonania_ms:.6f} ms")
+        if ma_cykl:
+            print("Sciezka: " + " -> ".join(map(str, sciezka)))
+        else:
+            print("\nNie znaleziono cyklu Hamiltona.")
+
+
 # Przykładowe użycie
 if __name__ == "__main__":
     ilosc_wierzcholkow = 10
