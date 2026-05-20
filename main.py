@@ -36,6 +36,7 @@ def main():
         graph.wyswietl_macierz()
         graph.znajdz_cykl_eulera()
         graph.znajdz_cykl_hamiltona()
+        graph.export_to_tikz("graf.tex")
 
     elif mode == "--non-hamilton":
         print("Wybrano tryb: Graf nie-hamiltonowski.")

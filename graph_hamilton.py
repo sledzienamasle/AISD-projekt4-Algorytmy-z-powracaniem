@@ -125,6 +125,39 @@ class Graf:
         else:
             print("\nNie znaleziono cyklu Hamiltona.")
 
+    def export_to_tikz(self, filename="graf.tex"):
+        """
+        Generuje plik .tex zawierający kod tikzpicture z wizualizacją grafu.
+        Wierzchołki są automatycznie rozkładane na okręgu.
+        """
+        import math
+
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write("% Kod do wklejenia do sprawozdania w LaTeXu\n")
+            f.write("\\begin{tikzpicture}[scale=2, every node/.style={circle, draw, fill=blue!10, inner sep=2pt, minimum size=6mm}]\n")
+            
+            # 1. Definiowanie pozycji wierzchołków na okręgu
+            r = 2.0  # promień okręgu w cm
+            for i in range(self.ilosc_wierzcholkow):
+                # Obliczanie kąta dla każdego wierzchołka w radianach
+                angle = (2 * math.pi * i) / self.ilosc_wierzcholkow
+                x = r * math.cos(angle)
+                y = r * math.sin(angle)
+                f.write(f"    \\node ({i}) at ({x:.2f}, {y:.2f}) {{{i}}};\n")
+            
+            f.write("\n    % Krawędzie grafu\n")
+            f.write("    \\begin{scope}[on background layer]\n") # opcjonalne, wymaga \usetikzlibrary{backgrounds}
+            
+            # 2. Generowanie krawędzi (tylko raz dla każdej pary u-v)
+            for i in range(self.ilosc_wierzcholkow):
+                for j in range(i + 1, self.ilosc_wierzcholkow):
+                    if self.macierz_sasiedztwa[i][j] == 1:
+                        f.write(f"    \\draw ({i}) -- ({j});\n")
+                        
+            f.write("    \\end{scope}\n")
+            f.write("\\end{tikzpicture}\n")
+        print(f"\n[Sukces] Wyeksportowano wizualizacje grafu do pliku: {filename}")
+
 # Przykładowe użycie
 if __name__ == "__main__":
     ilosc_wierzcholkow = 10
@@ -135,3 +168,4 @@ if __name__ == "__main__":
     graf.wyswietl_macierz()
     graf.znajdz_cykl_eulera()
     graf.znajdz_cykl_hamiltona()
+    graf.export_to_tikz("graf.tex")
