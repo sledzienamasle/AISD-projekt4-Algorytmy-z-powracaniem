@@ -1,4 +1,5 @@
 import random
+import time
 
 class Graf:
     def __init__(self, ilosc_wierzcholkow: int):
@@ -49,6 +50,61 @@ class Graf:
         for idx, row in enumerate(self.macierz_sasiedztwa):
             print(f"{idx}| " + " ".join(str(wartosc) for wartosc in row))
 
+    
+    def znajdz_cykl_eulera(self):
+        # kopiowanie macierzy sąsiedztwa, aby nie modyfikować oryginału bo to usuwak krawędzie
+        macierz_kopia = [row[:] for row in self.macierz_sasiedztwa]
+        cykl = []
+
+        start_time = time.perf_counter()
+
+        # stos zamiast rekurencji zeby uniknąć problemów
+        stack = [0] # zaczynamy od wierzchołka 0
+        while stack:
+            u = stack[-1]
+            # szukamy pierwszeego wolnego sasiada
+            ma_sasiada = False
+            for v in range(self.ilosc_wierzcholkow):
+                if macierz_kopia[u][v] == 1: # jest krawędź
+                    # usuwamy krawędź z kopii
+                    macierz_kopia[u][v] = 0
+                    macierz_kopia[v][u] = 0
+                    stack.append(v) # idziemy dalej
+                    ma_sasiada = True
+                    break
+            if not ma_sasiada:
+                # nie ma już sąsiadów, dodajemy do cyklu i wracamy
+                cykl.append(stack.pop())
+        
+        end_time = time.perf_counter()
+        czas_wykonania = end_time - start_time
+        print("\nCykl Eulera (wierzchołki w kolejności odwiedzin):")
+        print("Sciezka: " + " -> ".join(map(str, reversed(cykl))))
+        print(f"Czas wykonania: {czas_wykonania:.6f} sekund")
+
+    def _is_hamilton_safe(self, wierzcholek, pos, sciezka):
+        # Sprawdza, czy wierzchołki są połączone
+        if self.macierz_sasiedztwa[sciezka[pos - 1]][wierzcholek] == 0:
+            return False
+        # Sprawdza, czy wierzchołek nie jest już w ścieżce
+        if wierzcholek in sciezka[:pos]:
+            return False
+        return True
+    
+    def _hamilton_util(self, sciezka, pos):
+        # czy ostatni wierzchołek jest połączony z pierwszym
+        if pos == self.ilosc_wierzcholkow:
+            return self.macierz_sasiedztwa[sciezka[pos - 1]][sciezka[0]] == 1
+
+        for wierzcholek in range(1, self.ilosc_wierzcholkow):
+            if self._is_hamilton_safe(wierzcholek, pos, sciezka):
+                sciezka[pos] = wierzcholek
+                if self._hamilton_util(sciezka, pos + 1):
+                    return True
+                sciezka[pos] = -1 # backtrack
+        return False
+    
+    
 # Przykładowe użycie
 if __name__ == "__main__":
     ilosc_wierzcholkow = 10
