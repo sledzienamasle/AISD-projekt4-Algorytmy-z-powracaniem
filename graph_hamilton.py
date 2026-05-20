@@ -47,8 +47,9 @@ class Graf:
         """Wypisuje graf w wybranej reprezentacji macierzowej."""
         print("\nMacierz sasiedztwa grafu:")
         print("   " + " ".join(f"{i}" for i in range(self.ilosc_wierzcholkow)))
+        print("   " + "- " * self.ilosc_wierzcholkow)
         for idx, row in enumerate(self.macierz_sasiedztwa):
-            print(f"{idx}| " + " ".join(str(wartosc) for wartosc in row))
+            print(f"{idx} | " + " ".join(str(wartosc) for wartosc in row))
 
     
     def znajdz_cykl_eulera(self):
@@ -82,6 +83,9 @@ class Graf:
         print("Sciezka: " + " -> ".join(map(str, reversed(cykl))))
         print(f"Czas wykonania: {czas_wykonania_ms:.6f} ms")
 
+
+####################################################### POMOCNICZE DO CYKLU HAMILTONA #######################################################
+
     def _is_hamilton_safe(self, wierzcholek, pos, sciezka):
         # Sprawdza, czy wierzchołki są połączone
         if self.macierz_sasiedztwa[sciezka[pos - 1]][wierzcholek] == 0:
@@ -104,6 +108,8 @@ class Graf:
                 sciezka[pos] = -1 # backtrack
         return False
     
+#######################################################################################################################################
+
     def znajdz_cykl_hamiltona(self):
         sciezka = [-1] * self.ilosc_wierzcholkow
         sciezka[0] = 0 # zaczynamy od wierzchołka 0
@@ -118,7 +124,6 @@ class Graf:
             print("Sciezka: " + " -> ".join(map(str, sciezka)))
         else:
             print("\nNie znaleziono cyklu Hamiltona.")
-
 
 # Przykładowe użycie
 if __name__ == "__main__":
