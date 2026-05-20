@@ -41,3 +41,19 @@ class Graf:
             
             # przeliczanie krawedzi
             obecne_krawedzie = sum(sum(row) for row in self.macierz_sasiedztwa) // 2
+
+    def wyswietl_macierz(self):
+        """Wypisuje graf w wybranej reprezentacji macierzowej."""
+        print("\nMacierz sasiedztwa grafu:")
+        print("   " + " ".join(f"{i}" for i in range(self.ilosc_wierzcholkow)))
+        for idx, row in enumerate(self.macierz_sasiedztwa):
+            print(f"{idx}| " + " ".join(str(wartosc) for wartosc in row))
+
+# Przykładowe użycie
+if __name__ == "__main__":
+    ilosc_wierzcholkow = 10
+    procent_saturacji = 30.0
+
+    graf = Graf(ilosc_wierzcholkow)
+    graf.generowanie_hamiltona(procent_saturacji)
+    graf.wyswietl_macierz()
