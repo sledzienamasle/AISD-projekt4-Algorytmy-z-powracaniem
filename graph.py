@@ -5,6 +5,7 @@ class Graph:
     """
     def __init__(self, num_vertices: int):
         self.num_vertices = num_vertices
+        self.vertices = num_vertices
         self.adjacency_matrix = [[False] * num_vertices for _ in range(num_vertices)]
 
     def add_edge(self, u: int, v: int):
@@ -12,16 +13,40 @@ class Graph:
         self.adjacency_matrix[u][v] = True
         self.adjacency_matrix[v][u] = True
 
+    def remove_edge(self, u, v):
+        self.adjacency_matrix[u][v] = False
+        self.adjacency_matrix[v][u] = False
+
     def has_edge(self, u: int, v: int) -> bool:
         """Sprawdza, czy istnieje krawędź między u i v."""
         return self.adjacency_matrix[u][v]
 
     def display(self):
-        """Wypisuje reprezentację grafu do konsoli."""
+        """Wypisuje reprezentację grafu do konsoli z wyrównanymi kolumnami i indeksem."""
         print("\nMacierz sąsiedztwa grafu:")
-        for row in self.adjacency_matrix:
-            print(" ".join("1" if edge else "0" for edge in row))
+        
+        # Ustalamy szerokość pojedynczej kolumny w znakach (np. 3 znaki wystarczą do czytelności)
+        col_width = 3
+        
+        # 1. Nagłówek - Numeracja kolumn
+        header = " " * 4 + " "  # Margines na indeksy wierszy i kreskę separatora
+        for i in range(self.num_vertices):
+            header += f"{i:>{col_width}}"
+        print(header)
+        
+        # 2. Linia oddzielająca nagłówek od wartości
+        separator = " " * 4 + "+" + "-" * (self.num_vertices * col_width)
+        print(separator)
+        
+        # 3. Wiersze macierzy (Indeks wiersza | wartości)
+        for idx, row in enumerate(self.adjacency_matrix):
+            row_str = f"{idx:>3} | "  # Indeks wiersza wyrównany do prawej + pionowa kreska
+            for edge in row:
+                val = "1" if edge else "0"
+                row_str += f"{val:>{col_width}}"
+            print(row_str)
         print()
+        
 
     def export_to_tikz(self, filename="graf.tex"):
         """
