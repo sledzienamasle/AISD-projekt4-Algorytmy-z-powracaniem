@@ -28,6 +28,8 @@ def main():
         find_and_print_eulerian_cycle(graph)      # <--- TO JEST TA NOWA LINIJKA
         find_and_print_hamiltonian_cycle(graph)
 
+        graph.export_to_tikz()
+
     elif len(sys.argv) > 1 and sys.argv[1] == "--non-hamilton":
         print("Tryb --non-hamilton w przygotowaniu...")
     else:
